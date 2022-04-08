@@ -1,3 +1,9 @@
+// HOTBAR
+for(var i = 0; i < document.getElementsByClassName("hotbar").length; i++){
+    document.getElementsByClassName("hotbar")[i].style.height = (0.05 * window.innerWidth).toString();
+}
+var hotbar = ["cobblestone", "dirt", "grass", "oakLeaves", "oakLog", "sand", "glass", "brick", "plank"];
+
 // CURSOR
 var cursor = document.getElementById("cursor");
 cursor.style.left = ((0.5 * window.innerWidth) - (0.5 * cursor.width)).toString() + "px";
@@ -136,6 +142,30 @@ var waterTexture = [
     new THREE.MeshBasicMaterial({map: loader.load("texture/water/water.jpeg")}),
     new THREE.MeshBasicMaterial({map: loader.load("texture/water/water.jpeg")})
 ];
+var glassTexture = [
+    new THREE.MeshBasicMaterial({map : loader.load("texture/glass/glass.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/glass/glass.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/glass/glass.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/glass/glass.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/glass/glass.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/glass/glass.png")})
+];
+var brickTexture = [
+    new THREE.MeshBasicMaterial({map : loader.load("texture/brick/brick.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/brick/brick.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/brick/brick.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/brick/brick.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/brick/brick.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/brick/brick.png")})
+];
+var plankTexture = [
+    new THREE.MeshBasicMaterial({map : loader.load("texture/plank/plank.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/plank/plank.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/plank/plank.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/plank/plank.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/plank/plank.png")}),
+    new THREE.MeshBasicMaterial({map : loader.load("texture/plank/plank.png")})
+];
 
 var blocks = [
     {name: "grass", materialArray: grassTexture, mesh: new THREE.InstancedMesh(blockBox, grassTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count: 0, range: [0], biomes: ["plains"]},
@@ -145,8 +175,11 @@ var blocks = [
     {name: "oakleaves", materialArray: oakLeavesTexture, mesh: new THREE.InstancedMesh(blockBox, oakLeavesTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count: 0, range: [], biomes: ["plains"]},
     {name: "sand", materialArray: sandTexture, mesh: new THREE.InstancedMesh(blockBox, sandTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count: 0, range: [0, 1, 2], biomes: ["desert"]},
     {name: "water", materialArray: waterTexture, mesh: new THREE.InstancedMesh(blockBox, waterTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count: 0, range: [], biomes: ["plains","desert"]},
+    {name : "glass", materialArray : glassTexture, mesh : new THREE.InstancedMesh(blockBox, glassTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count : 0, range : [], biomes : ["plains", "desert"]},
+    {name : "brick", materialArray : brickTexture, mesh : new THREE.InstancedMesh(blockBox, brickTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count : 0, range : [], biomes : ["plains", "desert"]},
+    {name : "plank", materialArray : plankTexture, mesh : new THREE.InstancedMesh(blockBox, plankTexture, renderDistance * renderDistance * chunkSize * chunkSize * depth), count : 0, range : [], biomes : ["plains", "desert"]},
 ];
-var blockTypes = ["grass", "dirt", "cobblestone", "oakLog", "oakLeaves", "sand", "water"];
+var blockTypes = ["grass", "dirt", "cobblestone", "oakLog", "oakLeaves", "sand", "water", "glass", "brick", "plank"];
 var biomeSize = 1; // The higher this number, the larger the biomes get
 var treeDensity = 1;
 function getBiome(n){
@@ -161,6 +194,7 @@ var oakLogIndex = blockTypes.indexOf("oakLog");
 var oakLeavesIndex = blockTypes.indexOf("oakLeaves");
 var waterIndex = blockTypes.indexOf("water");
 var waterLevel = 0;
+var glassIndex = blockTypes.indexOf("glass");
 
 // Setting the opacity of water
 for(var i = 0; i < waterTexture.length; i++){
@@ -171,6 +205,11 @@ for(var i = 0; i < waterTexture.length; i++){
         blocks[waterIndex].materialArray[i].transparent = true;
         blocks[waterIndex].materialArray[i].opacity = 0.4;
     }
+}
+
+// Making glass transparent
+for(var i = 0; i < glassTexture.length; i++){
+    blocks[glassIndex].materialArray[i].transparent = true;
 }
 
 // INITIAL CHUNKS GENERATION
@@ -327,6 +366,8 @@ function identifyChunk(x, z){
 
 var start = 0;
 var sprint = false;
+var blockToBePlaced;
+var slot = 1;
 document.addEventListener("keydown", function(e){
     if(e.key == "w"){
         var elapsed = new Date().getTime();
@@ -334,6 +375,22 @@ document.addEventListener("keydown", function(e){
             sprint = true;
         }
         start = elapsed;
+    }
+
+    // Selecting a slot
+    if(["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key)){
+        for(var i = 1; i <= 9; i++){
+            document.getElementsByClassName("hotbar")[i - 1].style.opacity = "0.8";
+            document.getElementsByClassName("hotbar")[i - 1].style.border = "1px solid white";
+            document.getElementsByClassName("hotbar")[i - 1].style.zIndex = "0";
+            if(e.key == i.toString()){
+                slot = i;
+                blockToBePlaced = hotbar[slot - 1];
+                document.getElementsByClassName("hotbar")[i - 1].style.opacity = "1";
+                document.getElementsByClassName("hotbar")[i - 1].style.border = "2px solid black";
+                document.getElementsByClassName("hotbar")[i - 1].style.zIndex = "1";
+            }
+        }
     }
 
     keys.push(e.key);
@@ -406,7 +463,6 @@ document.addEventListener("keydown", function(e){
             }
             y = Math.round(y);
             if(y > minWorldY){    
-                var blockToBePlaced = "oakLog";
                 var b = new Block(x, y, z, true, blockToBePlaced);
                 if(!intersect(b.x, b.y, b.z, 5, 5, 5, player.x, player.y, player.z, player.w, player.h, player.d)){    
                     chunks[identifyChunk(x, z)].push(b);
@@ -1445,6 +1501,9 @@ window.addEventListener("resize", function(){
     camera.updateProjectionMatrix();
     cursor.style.left = ((0.5 * window.innerWidth) - (0.5 * cursor.width)).toString() + "px";
     cursor.style.top = ((0.5 * window.innerHeight) - (0.5 * cursor.height)).toString() + "px";
+    for(var i = 0; i < document.getElementsByClassName("hotbar").length; i++){
+        document.getElementsByClassName("hotbar")[i].style.height = (0.05 * window.innerWidth).toString();
+    }
 });
 
 // Raycaster for selecting block
