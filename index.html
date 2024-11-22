@@ -49,6 +49,58 @@
 		#slot9 {
 			left : 67.5%;
 		}
+		#gameScreenGUI {
+			display: none;
+		}
+		.titleScreen {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+		@font-face {
+			font-family: minecraft;
+			src: url(minecraftfont.woff);
+		}
+		.startingButtons {
+			position: absolute;
+			width: 15%;
+			height: 10%;
+			left: 42.5%;
+			border-radius: 20px;
+			background: rgb(170, 170, 170);
+			font-size: 18px;
+			font-family: "minecraft";
+			color: white;
+			cursor: pointer;
+		}
+		#startingLogo {
+			position: absolute;
+			width: 50%;
+			left: 25%;
+		}
+		#escapeScreen {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.1);
+		}
+		#escapeScreenGUI {
+			display: none;
+		}
+		.escapeButtons {
+			position: absolute;
+			width: 15%;
+			height: 10%;
+			left: 42.5%;
+			border-radius: 20px;
+			background: rgb(170, 170, 170);
+			font-size: 18px;
+			font-family: "minecraft";
+			color: white;
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>    
@@ -56,18 +108,43 @@
     <script type="text/javascript" src="perlin.js"></script>
     <script type="text/javascript" src="PointerLockControls.js"></script>
     <script type="text/javascript" src="stats.js"></script> 
+		<script src = "FileSaver.js"></script>
 
-    <img src = "texture/cobblestone/cobblestone.png" class = "hotbar" id = "slot1">
-	<img src = "texture/dirt/dirt.png" class = "hotbar" id = "slot2">
-	<img src = "texture/grass/side.jpg" class = "hotbar" id = "slot3">
-	<img src = "texture/oakLeaves/oakLeaves.png" class = "hotbar" id = "slot4">
-	<img src = "texture/oakLog/side.png" class = "hotbar" id = "slot5">
-	<img src = "texture/sand/sand.png" class = "hotbar" id = "slot6">
-	<img src = "texture/glass/glass.png" class = "hotbar" id = "slot7">
-	<img src = "texture/brick/brick.png" class = "hotbar" id = "slot8">
-	<img src = "texture/plank/plank.png" class = "hotbar" id = "slot9">
+		<div id="gameScreenGUI">
+			<img src = "texture/cobblestone/cobblestone.png" class = "hotbar" id = "slot1">
+			<img src = "texture/dirt/dirt.png" class = "hotbar" id = "slot2">
+			<img src = "texture/grass/side.jpg" class = "hotbar" id = "slot3">
+			<img src = "texture/oakLeaves/oakLeaves.png" class = "hotbar" id = "slot4">
+			<img src = "texture/oakLog/side.png" class = "hotbar" id = "slot5">
+			<img src = "texture/sand/sand.png" class = "hotbar" id = "slot6">
+			<img src = "texture/glass/glass.png" class = "hotbar" id = "slot7">
+			<img src = "texture/brick/brick.png" class = "hotbar" id = "slot8">
+			<img src = "texture/plank/plank.png" class = "hotbar" id = "slot9">
 
-    <img src="cursor.png" id="cursor">
+			<img src="cursor.png" id="cursor">
+		</div>
+
+		<div id="titleScreenGUI">
+			<img src = "titleScreen/one.jpeg" class = "titleScreen">
+			<img src = "titleScreen/two.jpeg" class = "titleScreen">
+			<img src = "titleScreen/three.jpeg" class = "titleScreen">
+			<img src = "titleScreen/four.jpeg" class = "titleScreen">
+			<img src = "titleScreen/five.jpeg" class = "titleScreen">
+			<img src = "titleScreen/six.jpeg" class = "titleScreen">
+
+			<button id="newgame" class="startingButtons" style="top: 55%">New Game</button>
+			<button id="loadgame" class="startingButtons" style="top: 70%">Load Game</button>
+			<button id="options" class="startingButtons" style="top: 85%">Options</button>
+			<input type = "file" style = "position: absolute; color: white; display: none" id = "inputFile" accept = ".json">
+
+			<img src="minecraftlogo.png" id="startingLogo">
+		</div>
+
+		<div id="escapeScreenGUI">
+			<div id="escapeScreen"></div>
+			<button id="option2" class="escapeButtons" style="top: 30%">Options</button>
+			<button id="titlescreensave" class="escapeButtons" style="top: 45%">Save and Quit to Title</button>
+		</div>
     
     <script type="text/javascript" src="script.js"></script>
 </body>
